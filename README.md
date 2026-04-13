@@ -2,60 +2,68 @@
 
 ## Overview
 
-This project is a fully connected neural network implemented from scratch using only NumPy. The goal was to understand how neural networks actually work under the hood by building each component manually instead of relying on high-level frameworks like PyTorch or TensorFlow.
+This project implements a fully connected feedforward neural network from first principles using NumPy. The primary objective was to develop a rigorous understanding of the underlying mechanics of neural networks by explicitly constructing each component, rather than relying on high-level deep learning frameworks such as PyTorch or TensorFlow.
 
-The implementation includes forward propagation, backpropagation, gradient descent, and a simple training loop.
+The implementation includes forward propagation, backpropagation via the chain rule, and parameter optimization using gradient descent.
 
 ---
 
 ## Features
 
-* Custom `Layer` and `Network` classes
-* Forward propagation across multiple layers
-* Backpropagation using the chain rule
+* Modular `Layer` and `Network` class design
+* Multi-layer forward propagation
+* Backpropagation with explicit gradient computation
 * ReLU activation function and its derivative
-* Gradient descent for updating weights and biases
-* Simple regression example for testing
+* Parameter updates using the Gradient Descent method
 
 ---
 
 ## Project Structure
 
 ```
-Layer.py    # Defines a single neural network layer
-Network.py  # Handles forward + backward propagation across layers
-Main.py     # Runs training loop and example
+Layer.py    # Implements individual fully connected layers
+Network.py  # Manages network architecture and training logic
+Main.py     # Executes training loop and example usage
 ```
 
 ---
 
-## How It Works
+## Methodology
 
-### Forward Pass
+### Forward Propagation
 
-Each layer performs:
+For each layer, the network computes a linear transformation followed by a non-linear activation:
 
-* Linear transformation: `z = W * x + b`
-* Activation (ReLU for hidden layers)
+* Linear step: `z = W x + b`
+* Activation: ReLU applied to hidden layers
 
-### Backward Pass
+This process is repeated sequentially across all layers to produce the final output.
 
-* Compute output error: `dC/da = 2 * (prediction - target)`
-* Propagate errors backward through layers using:
+### Backpropagation
 
-  * Transposed weights
-  * Activation derivatives
+Gradients are computed using the chain rule to propagate error signals backward through the network:
 
-### Weight Updates
+* Output error: `dC/da = 2 (y_pred - y_true)`
+* Hidden layer errors are calculated using the transpose of the weight matrices and the derivative of the activation function
 
-* Gradients are computed using the outer product of errors and previous activations
-* Parameters are updated using gradient descent
+This enables efficient computation of partial derivatives with respect to each parameter.
+
+### Parameter Updates
+
+Gradients for weights are computed as the outer product of the layer errors and the activations from the previous layer. Bias gradients are derived directly from the error terms.
+
+All parameters are updated using the Gradient Descent method:
+
+* `W := W - η ∂C/∂W`
+* `b := b - η ∂C/∂b`
+
+where `η` is the learning rate.
 
 ---
 
 ## Example
 
-The model is trained on a simple regression task:
+The network is evaluated on a simple regression task:
 
 ```python
 inputs = [2.0, 3.0]
@@ -63,40 +71,47 @@ target = 13.0
 hidden_layers = [4, 4]
 ```
 
-Training output:
+Training produces a decreasing loss over successive epochs:
 
 ```
 Epoch 1: output=..., loss=...
 ...
-Epoch 100: output≈13, loss≈0
+Epoch 100: output ≈ 13, loss ≈ 0
 ```
 
 ---
 
-## What I Learned
+## Key Takeaways
 
-* How forward and backward propagation work mathematically
-* How gradients are computed and applied
-* How neural networks learn from data step-by-step
-* The importance of activation functions in learning non-linear relationships
-
----
-
-## Next Steps
-
-* Implement mini-batching
-* Add different activation functions (Sigmoid, Tanh)
-* Introduce more advanced optimizers (Adam, Momentum)
-* Extend to classification problems
+* Practical implementation of forward and backward propagation
+* Explicit derivation and application of gradients
+* Understanding how error signals propagate through layered architectures
+* Insight into how the Gradient Descent method drives learning in neural networks
 
 ---
 
-## Why This Project
+## Motivation
 
-This project was built to move beyond using machine learning libraries and develop a deeper understanding of the underlying mechanics of neural networks.
+The purpose of this project was to move beyond black-box usage of machine learning libraries and instead build a concrete understanding of how neural networks operate at a mathematical and computational level.
+
+---
+
+## Future Work
+
+* Implement mini-batch (batch) processing to improve training efficiency and stability
+* Evaluate the impact of batch size on convergence speed and generalization
+* Compare full-batch vs mini-batch gradient descent in terms of runtime and accuracy
+
+---
+
+## References
+
+* Michael Nielsen, *Neural Networks and Deep Learning* — [http://neuralnetworksanddeeplearning.com/](http://neuralnetworksanddeeplearning.com/)
 
 ---
 
 ## Author
 
-Built as part of a personal deep learning journey.
+Josh Gibb
+
+Recent graduate with a focus on machine learning and computational methods.
